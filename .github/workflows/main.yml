@@ -1,0 +1,38 @@
+name: CI # Workflow 이름
+  on:  # Event 감지
+    push:
+      branches: [ main ]
+    pull_request:
+      branches: [ main ]
+	
+  jobs:
+    build:
+      runs-on: ubuntu-latest  # Job 가상환경 인스턴스
+	
+      steps:
+      - name: Checkout source code.
+      - uses: actions/checkout@v3
+
+       - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules # node_modules 폴더를 캐싱
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          # runner.OS : 가상환경을 의미하며 여기서는 "Linux"를 의미
+          # hashFiles('**/package-lock.json') : package-lock.json 파일을 해시화
+          restore-keys: |
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+	
+      - name: Install Dependencies # 의존 파일 설치
+        run: yarn
+
+      - name: Build // React Build
+        run: yarn build
+        env:
+          CI: "" # 경고를 에러로 보지 않게 함
+	
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
