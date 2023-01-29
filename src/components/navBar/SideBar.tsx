@@ -1,16 +1,21 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { GOOGLE_AUTH_URL } from "../../shared/OAuth";
 import { IconContext } from "react-icons";
 import { MdOutlineHome, MdOutlineExplore, MdOutlineSubscriptions, MdOutlineVideoLibrary, MdRestore } from "react-icons/md";
+import { VscAccount } from 'react-icons/vsc';
 
 interface PropsType {
   pathname: string,
 }
 
 const Sidebar = () => {
+
   const location = useLocation() as PropsType;
 
   const pathname: string = location.pathname;
+
+  const hash = localStorage.getItem("hash")
 
   const navigate = useNavigate();
 
@@ -52,7 +57,12 @@ const Sidebar = () => {
 
         <MainDiv>
           <MenuSpan>구독</MenuSpan>
-          <p>로그인하면 동영상에 좋아요를 표시하고 댓글을 달거나 구독할 수 있습니다.</p>
+          {hash ?
+            ""
+            : <>
+              <p>로그인하면 동영상에 좋아요를 표시하고 댓글을 달거나 구독할 수 있습니다.</p>
+              <LoginBtn onClick={GOOGLE_AUTH_URL}><Profile />로그인</LoginBtn>
+            </>}
         </MainDiv>
 
         <Line />
@@ -65,11 +75,11 @@ const Sidebar = () => {
 export default Sidebar;
 
 const Container = styled.div`
-  position: fixed;
+  position: absolute;
+  top: 0;
   left: 0;
   float: left;
   width: 250px;
-  height: 100%;
   text-align: left;
   overflow-y: scroll;
 
@@ -126,7 +136,7 @@ const MainMenuDiv = styled.div`
 
 const MainDiv = styled.div`
   padding: 0px 20px 0px 20px;
-  height: 100px;
+  height: 150px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -134,10 +144,6 @@ const MainDiv = styled.div`
   p {
     font-size : 13px;
   }
-
-  :hover {
-    background-color: #f3f3f3;
-  }  
 
   @media (max-width: 1300px) {
     display : none;
@@ -151,6 +157,23 @@ const MenuSpan = styled.span`
     font-size: 10px;
   }
 `;
+
+const LoginBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width : 150px;
+  height: 80px;
+  border: solid #065fd4;
+  border-width: 1px;
+  background: #fff;
+  color: #065fd4;
+  cursor: pointer;
+`;
+
+const Profile = styled(VscAccount)`
+    font-size: 25px;
+`
 
 const Line = styled.div`
   height: 1px;

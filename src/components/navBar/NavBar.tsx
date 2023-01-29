@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 import WaitModal from './WaitModal';
 import logo from '../../assets/logo.png';
 import { HiOutlineBars3 } from 'react-icons/hi2';
@@ -16,19 +17,37 @@ const SearchNav = () => {
 
     const [searchInput, setSearchInput] = useState<string>('');
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [img, setImg] = useState<string>("");
+
+    const hash = localStorage.getItem("hash")
 
     const onClickButton = useCallback(() => {
         setIsOpen(!isOpen);
     }, [isOpen]);
 
     const handleSearchSubmit = (e: React.FormEvent) => {
-        e.preventDefault(); // 새로고침 되지 않게
+        e.preventDefault();
         navigate(`/videos/${searchInput}`);
     };
 
     useEffect(() => {
         setSearchInput(keyword || '');
     }, [keyword]);
+
+    useEffect(() => {
+        if (hash) {
+            const accessToken = hash.split("=")[1].split("&")[0];
+            axios.get('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + accessToken, {
+                headers: {
+                    authorization: `token ${accessToken}`,
+                    accept: 'application/json'
+                }
+            })
+                .then(res => {
+                    setImg(res.data.picture);
+                }).catch(e => console.log('oAuth token expired'));
+        }
+    }, [])
 
     return (
         <NavWrap>
@@ -48,7 +67,9 @@ const SearchNav = () => {
                 {isOpen && (<WaitModal onClickButton={onClickButton} />)}
                 <Video onClick={onClickButton} />
                 <Notification onClick={onClickButton} />
-                <Profile />
+                {hash ?
+                    <Profile src={img} alt="profile" />
+                    : <BaseProfile />}
             </ProfileWrap>
         </NavWrap>
     );
@@ -156,7 +177,18 @@ const Notification = styled(IoMdNotificationsOutline)`
     }
 `
 
-const Profile = styled(VscAccount)`
+const Profile = styled.img`
+    width: 25px;
+    cursor: pointer;
+    border-radius : 15px;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+        transform: scale(1.3);
+    }
+`
+
+const BaseProfile = styled(VscAccount)`
     font-size: 25px;
     cursor: pointer;
     transition: transform 0.3s ease-in-out;
