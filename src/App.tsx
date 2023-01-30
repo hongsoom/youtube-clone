@@ -1,26 +1,33 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styled from 'styled-components';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { Outlet } from 'react-router';
+import { YoutubeAPIProvider } from './contenxt/YoutubeAPIContext';
+import NavBar from "./components/navBar/NavBar";
+import Sidebar from './components/navBar/SideBar';
 
-function App() {
+const queryclient = new QueryClient();
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <NavBar />
+      <Body>
+        <Sidebar />
+        <QueryClientProvider client={queryclient} >
+          <YoutubeAPIProvider>
+            <Outlet />
+          </YoutubeAPIProvider>
+        </QueryClientProvider>
+      </Body>
+    </>
   );
 }
 
 export default App;
+
+const Body = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+`;

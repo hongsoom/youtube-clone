@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { GOOGLE_AUTH_URL } from "../../shared/OAuth";
 import { IconContext } from "react-icons";
 import { MdOutlineHome, MdOutlineExplore, MdOutlineSubscriptions, MdOutlineVideoLibrary, MdRestore } from "react-icons/md";
-import { VscAccount } from 'react-icons/vsc';
+import { VscAccount } from "react-icons/vsc";
+import { AiOutlinePlaySquare, AiOutlineClockCircle, AiOutlineLike } from "react-icons/ai";
 
 interface PropsType {
   pathname: string,
@@ -15,7 +16,7 @@ const Sidebar = () => {
 
   const pathname: string = location.pathname;
 
-  const hash = localStorage.getItem("hash")
+  const hash = sessionStorage.getItem("hash")
 
   const navigate = useNavigate();
 
@@ -53,6 +54,24 @@ const Sidebar = () => {
           <MenuSpan>시청기록</MenuSpan>
         </MainMenuDiv>
 
+        {hash ?
+          <>
+            <MainMenuDiv className={"/channel" === pathname ? "active" : ""} onClick={() => onClick("/channel")}>
+              <AiOutlinePlaySquare color={"/channel" === pathname ? "red" : ""} />
+              <MenuSpan>내 동영상</MenuSpan>
+            </MainMenuDiv>
+
+            <MainMenuDiv className={"/playlist" === pathname ? "active" : ""} onClick={() => onClick("/playlist")}>
+              <AiOutlineClockCircle color={"/playlist" === pathname ? "red" : ""} />
+              <MenuSpan>나중에 볼 동영상</MenuSpan>
+            </MainMenuDiv>
+
+            <MainMenuDiv className={"/like" === pathname ? "active" : ""} onClick={() => onClick("/like")}>
+              <AiOutlineLike color={"/like" === pathname ? "red" : ""} />
+              <MenuSpan>좋아요 표시한 동영상</MenuSpan>
+            </MainMenuDiv>
+          </> : ""}
+
         <Line />
 
         <MainDiv>
@@ -64,8 +83,8 @@ const Sidebar = () => {
               <LoginBtn onClick={GOOGLE_AUTH_URL}><Profile />로그인</LoginBtn>
             </>}
         </MainDiv>
-
         <Line />
+
 
       </IconContext.Provider>
     </Container>
@@ -75,13 +94,9 @@ const Sidebar = () => {
 export default Sidebar;
 
 const Container = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  float: left;
-  width: 250px;
+  width: 100%;
+  max-width: 260px;
   text-align: left;
-  overflow-y: scroll;
 
   .react-icons {
     margin-right: 20px;

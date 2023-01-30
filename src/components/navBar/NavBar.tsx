@@ -19,7 +19,7 @@ const SearchNav = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [img, setImg] = useState<string>("");
 
-    const hash = localStorage.getItem("hash")
+    const hash = sessionStorage.getItem("hash");
 
     const onClickButton = useCallback(() => {
         setIsOpen(!isOpen);
@@ -47,7 +47,7 @@ const SearchNav = () => {
                     setImg(res.data.picture);
                 }).catch(e => console.log('oAuth token expired'));
         }
-    }, [])
+    }, [hash])
 
     return (
         <NavWrap>

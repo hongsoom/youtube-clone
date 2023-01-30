@@ -7,7 +7,7 @@ const Login = () => {
 
     const url = new URL(window.location.href);
     const hash = url.hash;
-    localStorage.setItem("hash", hash);
+    sessionStorage.setItem("hash", hash);
 
     useEffect(() => {
         navigate('/');
