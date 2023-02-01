@@ -7,7 +7,9 @@ import Loading from "../components/Video/Loding";
 
 const Videos = () => {
   const { keyword } = useParams();
+
   const youtube = useYoutubeApi();
+
   const {
     isLoading,
     data: videos,
@@ -46,7 +48,7 @@ const Videos = () => {
         </>}
       {videos && (
         videos.map((video: any) => (
-          <VideoCard key={video.id} video={video} />
+          <VideoCard video={video} />
         ))
       )}
     </VideoList>
