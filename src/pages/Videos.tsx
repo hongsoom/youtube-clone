@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
 import { useYoutubeApi } from "../contenxt/YoutubeAPIContext";
 import VideoCard from "../components/Video/VideoCard";
+import Sidebar from "../components/navBar/SideBar";
 import Loading from "../components/Video/Loding";
 
 const Videos = () => {
@@ -16,46 +17,55 @@ const Videos = () => {
   } = useQuery(['videos', keyword], () => youtube.search(keyword || undefined));
 
   return (
-    <VideoList>
-      {isLoading &&
-        <>
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-          <Loading />
-        </>}
-      {videos && (
-        videos.map((video: any) => (
-          <VideoCard video={video} />
-        ))
-      )}
-    </VideoList>
+    <VideoMain>
+      <Sidebar />
+      <VideoList>
+        {isLoading &&
+          <>
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+            <Loading />
+          </>}
+        {videos && (
+          videos.map((video: any) => (
+            <VideoCard video={video} />
+          ))
+        )}
+      </VideoList>
+    </VideoMain>
   );
 }
 
 export default Videos
+
+const VideoMain = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+`;
 
 const VideoList = styled.div`
   width: 100%;
