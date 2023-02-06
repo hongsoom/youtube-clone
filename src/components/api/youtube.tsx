@@ -1,12 +1,19 @@
 import axios from "axios";
 
-export default class Youtube {
+class Youtube {
     httpClient: any;
+    channelList: any;
+    finalList: any;
+    channels: any;
+    relatedList: any;
     constructor() {
         this.httpClient = axios.create({
             baseURL: 'https://www.googleapis.com/youtube/v3',
             params: { key: process.env.REACT_APP_YOUTUBE_API_KEY },
         });
+        this.channelList = [];
+        this.finalList = [];
+        this.channels = {};
     }
     async search(keyword: string) {
         return keyword ? this.#searchByKeyword(keyword) : this.#mostPopular();
@@ -27,39 +34,63 @@ export default class Youtube {
                 items.map((item: any) => ({ ...item, id: item.id.videoId }))
             );
     }
+
     async #mostPopular() {
-        return this.httpClient
+        const response = await this.httpClient
             .get('videos', {
                 params: {
-                    part: 'snippet, contentDetails, statistics',
+                    part: 'snippet',
                     maxResults: 25,
                     chart: 'mostPopular',
                     regionCode: "KR",
                 },
             })
-            .then((res: any) => res.data.items);
+        this.finalList = [];
+        response.data.items.map((item: any) => {
+            return this.finalList.push(this.channel(item.snippet.channelId, item));
+        });
+        return Promise.all(this.finalList).then((values) => values);
     }
-    async channelImgURL(id: string) {
-        return this.httpClient
-            .get('channels', {
-                params: {
-                    part: 'snippet',
-                    id,
-                },
-            })
-            .then((res: any) => res.data.items[0].snippet.thumbnails.default.url)
-    }
+
     async relatedVideos(id: string) {
-        return this.httpClient
+        const response = await this.httpClient
             .get('search', {
                 params: {
                     part: 'snippet',
                     relatedToVideoId: id,
                     type: 'video',
-                    maxResults: 25,
-                    regionCode: "KR",
+                    maxResults: 15,
+                    chart: 'mostPopular',
                 },
             })
-            .then((res: any) => res.data.items);
+
+        this.relatedList = [];
+
+        response.data.items.map((item: any) => {
+            return this.relatedList.push({ ...item, id: item.id.videoId });
+        });
+
+        this.finalList = [];
+        this.relatedList.map((item: any) => {
+            return this.finalList.push(this.channel(item.snippet.channelId, item));
+        });
+        return Promise.all(this.finalList).then((values) => values);
+    }
+
+    async channel(id: string, videos: any) {
+        const response = await this.httpClient.get("channels", {
+            params: {
+                part: "snippet, statistics",
+                id,
+            },
+        });
+
+        if (response.data.items[0].hasOwnProperty("snippet")) {
+            response.data.items[0].channelInfo = response.data.items[0].snippet;
+            delete response.data.items[0].snippet;
+        }
+
+        return (this.channels = { ...response.data.items[0], ...videos });
     }
 }
+export default Youtube;
