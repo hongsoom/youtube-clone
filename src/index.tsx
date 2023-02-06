@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Videos from './pages/Videos';
+import Videos from './pages/Main';
 import VideoDetail from './pages/VideoDetail';
 import Subscribe from './pages/Subscribe';
 import Finder from './pages/Finder';
