@@ -113,6 +113,8 @@ const DetailWrap = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
+    border-style: none;
+    border-radius: 5px;
   }
 `;
 
