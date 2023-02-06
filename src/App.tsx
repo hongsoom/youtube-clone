@@ -36,6 +36,6 @@ const VideoMain = styled.div< { pathname: string }>`
   display: flex;
 
   @media all and (max-width: 1024px) {
-    flex-wrap : ${(props) => (props.pathname === '/' && 'wrap')};
+    flex-wrap : ${(props) => (props.pathname !== '/' && 'wrap')};
   }
 `;
