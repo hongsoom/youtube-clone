@@ -1,117 +1,203 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import ReactPlayer from "react-player";
-import { useQuery } from "@tanstack/react-query";
-import { useYoutubeApi } from "../../contenxt/YoutubeAPIContext";
 import { formatAgo } from "../../shared/date";
 
-const VideoCard = ({ video, key }: any) => {
-    const { title, channelId, thumbnails, channelTitle, publishedAt } = video.snippet;
-    const { viewCount } = video.statistics;
+const VideoCard = ({ video, video: { snippet, statistics, channelInfo },
+    display }: any) => {
 
-    const youtube = useYoutubeApi();
+    const displayType: boolean = display === "/" ? false : true;
 
-    const [hover, setHover] = useState<boolean>(false);
+    const { title, channelTitle, publishedAt, thumbnails } = snippet
+    const { viewCount } = statistics
 
     const navigate = useNavigate();
 
-    const {
-        data: url,
-    } = useQuery(['channels', channelId], () => youtube.channelImgURL(channelId));
-
     return (
-        <VideoItem
-            /*   onMouseOver={() => setHover(true)}
-              onMouseOut={() => setHover(false)} */
-            onClick={() => navigate(`videos/watch/:${key}`)}
+        <VideoItem displayType={displayType}
+            onClick={() => navigate(`/videos/watch/${video.id}`, { state: video })}
         >
-            {hover ? (
-                <ReactPlayer
-                    url='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-                    muted
-                    progressInterval={1000}
-                    pip={true}
-                    width={"100%"}
-                    height={"auto"}
-                    playing
-                    style={{ marginBottom: "10px" }}
-                />
-            ) : (
-                <Thumbnail src={thumbnails.medium.url} />
-            )}
+            <Thumbnail displayType={displayType}>
+                <ThumbImg src={thumbnails.medium.url} alt="youtube_videos" displayType={displayType} />
+            </Thumbnail>
 
-            <Info>
-                <>
-                    <Profile src={url} />
-                </>
-                <Title>{title}</Title>
-                <Chanel>{channelTitle}</Chanel>
-                <Views>조회수 {viewCount}회·</Views>
-                <Date>{formatAgo(publishedAt, 'ko')}</Date>
-            </Info>
-        </VideoItem>
+            <InfoWrap displayType={displayType}>
+                <Info displayType={displayType}>
+                    <li>
+                        <ChanelImg src={channelInfo.thumbnails.medium.url} alt="" displayType={displayType} />
+                    </li>
+                    <ChanelInfo>
+                        <Title displayType={displayType}>{title}</Title>
+                        <Chanel displayType={displayType}>{channelTitle}</Chanel>
+                        <Views displayType={displayType}>조회수 {viewCount > 10000
+                            ? viewCount.slice(0, -4) + "만"
+                            : viewCount}</Views>
+                        <Date displayType={displayType}>{formatAgo(publishedAt, 'ko')}</Date>
+                    </ChanelInfo>
+                </Info>
+            </InfoWrap>
+        </VideoItem >
     );
 }
 
 export default VideoCard;
 
-const VideoItem = styled.div`
+const VideoItem = styled.li< { displayType: boolean }>`
     width: 100%;
     height: 100%;
     cursor: pointer;
     box-sizing: border-box;
     padding: 0 10px 0 0;
+    list-style-type: none;
+    display: ${(props) => (props.displayType && 'flex')};
+    list-style-type : none;
 
     $:hover {
         box-shadow: 5px 7px 10px 0px #bebebe;
     }
+
+    
+    @media all and (max-width: 1024px) {
+      padding: 0;
+    }
 `;
 
-const Thumbnail = styled.img`
-    width: 100%;
+const Thumbnail = styled.figure< { displayType: boolean }>`
+    padding: 0;
+    margin: 0;
+    margin-left :  ${(props) => (props.displayType && '20px')};
+    width : ${(props) => (props.displayType && '168px')};
+    margin-right :  ${(props) => (props.displayType && '10px')};
+
+    img {
+        border-radius: 12px;
+        transition: all 0.3s ease-in-out;
+        width : ${(props) => (props.displayType ? '168px' : '100%')};
+        height : ${(props) => (props.displayType && '94.5px')};
+    }
+
+    @media all and (max-width: 400px) {
+        margin-left: ${(props) => (props.displayType && '0px')};
+        width: ${(props) => (props.displayType && 'fit-content')};
+        margin-right: ${(props) => (props.displayType && '10px')};
+    }
+`;
+
+const ThumbImg = styled.img< { displayType: boolean }>`
     border-radius: 12px;
     transition: all 0.3s ease-in-out;
-    overflow:hidden;
-    object-fit:cover;
+    width : ${(props) => (props.displayType ? '168px' : '100%')};
+    height : ${(props) => (props.displayType && '94.5px')};
+ 
+
+    @media all and (max-width: 400px) {
+        width: ${(props) => (props.displayType && '100px')};
+        height: ${(props) => (props.displayType && '76px')};
+    }
 `;
 
-const Profile = styled.img`
-  border-radius: 50%;
-  width: 35px;
-  float: left;
-  margin: 0 10px 50px 10px;
+
+const InfoWrap = styled.div< { displayType: boolean }>`
+    width : ${(props) => (props.displayType && '70%')};
+    list-style: none;
+    padding: 0;
+    margin: 0;
 `;
 
-const Info = styled.div`
-    margin-top: 10px;
-`;
-
-const Title = styled.div`
-  overflow: hidden;
-  white-space: normal;
-  line-height: 1.2;
-  text-align: left;
-  word-wrap: break-word;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  color: black;
-`;
-
-const Chanel = styled.div`
+const Info = styled.ul< { displayType: boolean }>`
+    width: 100%;
+    display: flex;
     margin-top: 5px;
-  color: darkslategrey;
-  font-size: smaller;
+    padding: 0;
+    margin-top : ${(props) => (props.displayType && '0px')};
+    list-style-type : none;
 `;
 
-const Views = styled.span`
-  color: darkslategrey;
-  font-size: smaller;
-  margin-right : 5px;
+const ChanelImg = styled.img< { displayType: boolean }>`
+    display : ${(props) => (props.displayType && 'none')};
+    width : ${(props) => (props.displayType === false && '36px')};
+    height : ${(props) => (props.displayType === false && '36px')};
+    margin-right : ${(props) => (props.displayType === false && '15px')};
+    border-radius : ${(props) => (props.displayType === false && '100%')};
 `;
 
-const Date = styled.span`
-  color: darkslategrey;
-  font-size: smaller;
+const ChanelInfo = styled.li`
+    @media all and (max-width: 768px) {
+      display: flex;
+      flex-wrap: wrap;
+  }
+`;
+
+const Title = styled.p< { displayType: boolean }>`
+    font-weight: 500;
+    color: rgb(44, 44, 44);
+    margin : 0;
+    padding : 2px;
+    font-size: ${(props) => (props.displayType ? '0.8rem' : '1.05rem')};
+    line-height: 1.4;
+
+    @media all and (max-width: 768px) {
+        width: 100%;
+    }
+
+    @media all and (max-width: 480px) {
+        font-size: 0.95rem;
+    }
+
+    @media all and (max-width: 400px) {
+        font-size: ${(props) => (props.displayType && '0.8rem')};
+    }
+       
+`;
+
+const Chanel = styled.p< { displayType: boolean }>`
+    margin-top: 6px;
+    color: rgb(133, 133, 133);
+    margin : 0;
+    padding : 2px;
+    font-size: ${(props) => (props.displayType ? '0.8rem' : '0.9rem')};
+
+    @media all and (max-width: 768px) {
+        margin-right: 20px;
+    }
+
+    @media all and (max-width: 480px) {
+        font-size: 0.8rem;
+    }
+
+    @media all and (max-width: 400px) {
+        font-size: ${(props) => (props.displayType && '0.73rem')};
+    }
+`;
+
+const Views = styled.p< { displayType: boolean }>`
+    margin-top: 5px;
+    color: rgb(133, 133, 133);
+    margin : 0;
+    padding : 2px;
+    font-size: ${(props) => (props.displayType ? '0.8rem' : '0.9rem')};
+
+    @media all and (max-width: 480px) {
+        font-size: 0.8rem;
+    }
+
+    @media all and (max-width: 400px) {
+        font-size: ${(props) => (props.displayType && '0.73rem')};
+    }
+`;
+
+const Date = styled.p< { displayType: boolean }>`
+    margin-top: 5px;
+    color: rgb(133, 133, 133);
+    margin : 0;
+    padding : 2px;
+    font-size: ${(props) => (props.displayType ? '0.8rem' : '0.9rem')};
+
+    @media all and (max-width: 480px) {
+        font-size: 0.8rem;
+    }
+
+    @media all and (max-width: 400px) {
+        font-size: ${(props) => (props.displayType && '0.73rem')};
+    }
 `;
