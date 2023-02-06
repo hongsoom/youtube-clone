@@ -16,6 +16,7 @@ const LikeWrap = styled.div`
     align-items: center;
     justify-content: center;
     margin-top: 100px;
+    margin: auto;
 `
 
 const LikeLogo = styled(AiOutlineLike)`

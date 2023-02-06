@@ -25,6 +25,7 @@ const FinderWrap = styled.div`
     align-items: center;
     justify-content: center;
     margin-top: 100px;
+    margin: auto;
 `
 
 const FinderLogo = styled(MdOutlineExplore)`
