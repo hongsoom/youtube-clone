@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { GOOGLE_AUTH_URL } from "../../shared/OAuth";
@@ -10,7 +11,7 @@ interface PropsType {
   pathname: string,
 }
 
-const Sidebar = () => {
+const Sidebar = memo(({ open }: any) => {
 
   const location = useLocation() as PropsType;
 
@@ -25,57 +26,56 @@ const Sidebar = () => {
   }
 
   return (
-    <Container>
+    <Container open={open}>
       <IconContext.Provider value={{ className: "react-icons" }}>
-        <MainMenuDiv className={"/" === pathname ? "active" : ""} onClick={() => onClick("/")}>
+        <MainMenuDiv className={"/" === pathname ? "active" : ""} onClick={() => onClick("/")} open={open}>
           <MdOutlineHome color={"/" === pathname ? "red" : ""} />
-          <MenuSpan>홈</MenuSpan>
+          <MenuSpan open={open}>홈</MenuSpan>
         </MainMenuDiv>
 
-        <MainMenuDiv className={"/finder" === pathname ? "active" : ""} onClick={() => onClick("/finder")}>
+        <MainMenuDiv className={"/finder" === pathname ? "active" : ""} onClick={() => onClick("/finder")} open={open}>
           <MdOutlineExplore color={"/finder" === pathname ? "red" : ""} />
-          <MenuSpan>탐색</MenuSpan>
+          <MenuSpan open={open}>탐색</MenuSpan>
         </MainMenuDiv>
 
-        <MainMenuDiv className={"/subscribe" === pathname ? "active" : ""} onClick={() => onClick("/subscribe")}>
+        <MainMenuDiv className={"/subscribe" === pathname ? "active" : ""} onClick={() => onClick("/subscribe")} open={open}>
           <MdOutlineSubscriptions color={"/subscribe" === pathname ? "red" : ""} />
-          <MenuSpan>구독</MenuSpan>
+          <MenuSpan open={open}>구독</MenuSpan>
         </MainMenuDiv>
 
-        <Line />
+        <Line open={open} />
 
-        <MainMenuDiv className={"/storage" === pathname ? "active" : ""} onClick={() => onClick("/storage")}>
+        <MainMenuDiv className={"/storage" === pathname ? "active" : ""} onClick={() => onClick("/storage")} open={open}>
           <MdOutlineVideoLibrary color={"/storage" === pathname ? "red" : ""} />
-          <MenuSpan>보관함</MenuSpan>
+          <MenuSpan open={open}>보관함</MenuSpan>
         </MainMenuDiv>
 
-        <MainMenuDiv className={"/history" === pathname ? "active" : ""} onClick={() => onClick("/history")}>
+        <MainMenuDiv className={"/history" === pathname ? "active" : ""} onClick={() => onClick("/history")} open={open}>
           <MdRestore color={"/history" === pathname ? "red" : ""} />
-          <MenuSpan>시청기록</MenuSpan>
+          <MenuSpan open={open}>시청기록</MenuSpan>
         </MainMenuDiv>
 
         {hash ?
           <>
-            <MainMenuDiv className={"/channel" === pathname ? "active" : ""} onClick={() => onClick("/channel")}>
+            <MainMenuDiv className={"/channel" === pathname ? "active" : ""} onClick={() => onClick("/channel")} open={open}>
               <AiOutlinePlaySquare color={"/channel" === pathname ? "red" : ""} />
-              <MenuSpan>내 동영상</MenuSpan>
+              <MenuSpan open={open}>내 동영상</MenuSpan>
             </MainMenuDiv>
 
-            <MainMenuDiv className={"/playlist" === pathname ? "active" : ""} onClick={() => onClick("/playlist")}>
+            <MainMenuDiv className={"/playlist" === pathname ? "active" : ""} onClick={() => onClick("/playlist")} open={open}>
               <AiOutlineClockCircle color={"/playlist" === pathname ? "red" : ""} />
-              <MenuSpan>나중에 볼 동영상</MenuSpan>
+              <MenuSpan open={open}>나중에 볼 동영상</MenuSpan>
             </MainMenuDiv>
 
-            <MainMenuDiv className={"/like" === pathname ? "active" : ""} onClick={() => onClick("/like")}>
+            <MainMenuDiv className={"/like" === pathname ? "active" : ""} onClick={() => onClick("/like")} open={open}>
               <AiOutlineLike color={"/like" === pathname ? "red" : ""} />
-              <MenuSpan>좋아요 표시한 동영상</MenuSpan>
+              <MenuSpan open={open}>좋아요 표시한 동영상</MenuSpan>
             </MainMenuDiv>
           </> : ""}
 
-        <Line />
-
-        <MainDiv>
-          <MenuSpan>구독</MenuSpan>
+        <Line open={open} />
+        <MainDiv open={open}>
+          <MenuSpan open={open}>구독</MenuSpan>
           {hash ?
             ""
             : <>
@@ -83,23 +83,21 @@ const Sidebar = () => {
               <LoginBtn onClick={GOOGLE_AUTH_URL}><Profile />로그인</LoginBtn>
             </>}
         </MainDiv>
-        <Line />
-
-
+        <Line open={open} />
       </IconContext.Provider>
     </Container>
   );
-};
+});
 
 export default Sidebar;
 
-const Container = styled.div`
-  width: 100%;
+const Container = styled.div<{ open: boolean }>`
   max-width: 260px;
   text-align: left;
+  width : ${(props) => (props.open ? '100px' : '100%')};
 
   .react-icons {
-    margin-right: 20px;
+    margin-right: ${(props) => (props.open ? '0' : '20px')};
     font-size: 30px;
     align-items: center;
     display: flex;
@@ -107,7 +105,7 @@ const Container = styled.div`
   }
 
   @media (max-width: 700px) {
-    display: none;
+    display: ${(props) => (props.open ? '0' : 'none')};
   }
   
   @media (max-width: 1300px) {
@@ -118,7 +116,6 @@ const Container = styled.div`
     }
   }
 
-  /*스크롤바*/
   &::-webkit-scrollbar {
     border: none;
     -webkit-appearance: none;
@@ -129,12 +126,16 @@ const Container = styled.div`
   }
 `;
 
-const MainMenuDiv = styled.div`
-  padding: 0px 20px 0px 20px;
+const MainMenuDiv = styled.div<{ open: boolean }>`
   height: 50px;
   display: flex;
   align-items: center;
   cursor: pointer;
+  height : ${(props) => (props.open ? '90px' : '50px')};
+  padding : ${(props) => (props.open === false && '0px 20px 0px 20px')};
+  flex-direction : ${(props) => (props.open && 'column')};
+  gap : ${(props) => (props.open && '10px')};
+  justify-content : ${(props) => (props.open && 'center')};
 
   :hover {
     background-color: #f3f3f3;
@@ -145,14 +146,13 @@ const MainMenuDiv = styled.div`
     flex-direction: column;
     gap: 10px;
     justify-content: center;
-    align-items: center;
   }
 `;
 
-const MainDiv = styled.div`
+const MainDiv = styled.div<{ open: boolean }>`
   padding: 0px 20px 0px 20px;
   height: 150px;
-  display: flex;
+  display: ${(props) => (props.open ? 'none' : 'flex')};
   flex-direction: column;
   cursor: pointer;
 
@@ -165,8 +165,8 @@ const MainDiv = styled.div`
   }
 `;
 
-const MenuSpan = styled.span`
-  font-size: 15px;
+const MenuSpan = styled.span<{ open: boolean }>`
+  font-size:  ${(props) => (props.open ? '10px' : '15px')};
 
   @media (max-width: 1300px) {
     font-size: 10px;
@@ -190,11 +190,12 @@ const Profile = styled(VscAccount)`
     font-size: 25px;
 `
 
-const Line = styled.div`
+const Line = styled.div<{ open: boolean }>`
   height: 1px;
   background: #dedede;
   margin-top: 14px;
   margin-bottom: 14px;
+  display: ${(props) => (props.open ? 'none' : '')};
 
   @media (max-width: 1300px) {
     display: none;

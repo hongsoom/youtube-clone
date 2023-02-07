@@ -1,9 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
 import VideoCard from "./VideoCard";
 
-const Video = ({ videos, display }: any) => {
-    const displayType: boolean = display === "/" ? false : true;
+const Video = memo(({ videos, display }: any) => {
+    const displayType: boolean = display.includes('watch') ? true : false;
 
     return (
         <VideoMainWrap displayType={displayType}>
@@ -16,7 +16,7 @@ const Video = ({ videos, display }: any) => {
             ))}
         </VideoMainWrap>
     );
-};
+});
 
 export default Video;
 

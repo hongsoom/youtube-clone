@@ -1,13 +1,12 @@
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { formatAgo } from "../../shared/date";
 
-const VideoCard = ({ video, video: { snippet, statistics, channelInfo },
+const VideoCard = memo(({ video, video: { snippet, statistics, channelInfo },
     display }: any) => {
 
-    const displayType: boolean = display === "/" ? false : true;
-
+    const displayType: boolean = display.includes('watch') ? true : false;
     const { title, channelTitle, publishedAt, thumbnails } = snippet
     const { viewCount } = statistics
 
@@ -38,7 +37,7 @@ const VideoCard = ({ video, video: { snippet, statistics, channelInfo },
             </InfoWrap>
         </VideoItem >
     );
-}
+});
 
 export default VideoCard;
 

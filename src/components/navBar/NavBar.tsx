@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { memo, useRef, useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import { TbVideoPlus } from 'react-icons/tb';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { VscAccount } from 'react-icons/vsc';
 
-const SearchNav = () => {
+const SearchNav = memo(({ setOpen, open }: any) => {
     const { keyword } = useParams();
 
     const navigate = useNavigate();
@@ -19,15 +19,27 @@ const SearchNav = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [img, setImg] = useState<string>("");
 
+    const inputRef = useRef<HTMLInputElement>(null);
+
     const hash = sessionStorage.getItem("hash");
 
     const onClickButton = useCallback(() => {
         setIsOpen(!isOpen);
     }, [isOpen]);
 
-    const handleSearchSubmit = (e: React.FormEvent) => {
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchInput(e.target.value);
+    };
+
+    const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         navigate(`/videos/${searchInput}`);
+    };
+
+    const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleSearch(e);
+        }
     };
 
     useEffect(() => {
@@ -52,7 +64,7 @@ const SearchNav = () => {
     return (
         <NavWrap>
             <LogoWrap>
-                <Category />
+                <Category onClick={() => setOpen(!open)} />
                 <Logo src={logo} alt='youtubeLogo' onClick={() => navigate('/')} />
             </LogoWrap>
             <SearchWrap>
@@ -60,8 +72,10 @@ const SearchNav = () => {
                     placeholder='검색'
                     type='text'
                     value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)} />
-                <SearchBtn onClick={handleSearchSubmit} />
+                    ref={inputRef}
+                    onChange={onChange}
+                    onKeyPress={onKeyPress} />
+                <SearchBtn onClick={handleSearch} />
             </SearchWrap>
             <ProfileWrap>
                 {isOpen && (<WaitModal onClickButton={onClickButton} />)}
@@ -73,7 +87,7 @@ const SearchNav = () => {
             </ProfileWrap>
         </NavWrap>
     );
-};
+});
 
 const NavWrap = styled.div`
     height: 90px;
@@ -97,6 +111,7 @@ const LogoWrap = styled.div`
 
 const Category = styled(HiOutlineBars3)`
     font-size : 24px;
+    cursor: pointer;
 `
 
 const Logo = styled.img`

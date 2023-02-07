@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { memo, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import { useLocation } from "react-router";
@@ -6,7 +6,7 @@ import { useYoutubeApi } from "../contenxt/YoutubeAPIContext";
 import { formatAgo } from "../shared/date";
 import Video from "../components/Video/Video";
 
-const VideoDetail = () => {
+const VideoDetail = memo(() => {
 
   const videoTop = useRef(null);
 
@@ -20,7 +20,9 @@ const VideoDetail = () => {
 
   const {
     data: videos,
-  } = useQuery(['search', video.id], () => youtube.relatedVideos(video.id));
+  } = useQuery(['search', video.id], () => youtube.relatedVideos(video.id), {
+    staleTime: 1000 * 60 * 5,
+  });
 
   const scrollTop = () => {
     window.scroll({
@@ -39,7 +41,8 @@ const VideoDetail = () => {
       <VideoDetailContent ref={videoTop}>
         <DetailWrap>
           <iframe
-            title="youtube video player"
+            id={video.id}
+            title={snippet.title}
             width="100%"
             height="600px"
             src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
@@ -83,7 +86,7 @@ const VideoDetail = () => {
       <Video display={pathname} videos={videos} />
     </VideoDetailWrap>
   )
-};
+});
 export default VideoDetail;
 
 const VideoDetailWrap = styled.div<{ pathname: string }>`
@@ -97,7 +100,8 @@ const VideoDetailWrap = styled.div<{ pathname: string }>`
 `;
 
 const VideoDetailContent = styled.section`
-  padding: 0.2em;
+  padding: 1.5em;
+  width : 1500px;
 `;
 
 const DetailWrap = styled.div`
