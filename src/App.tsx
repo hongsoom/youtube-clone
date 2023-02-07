@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Outlet, useLocation } from 'react-router';
 import styled from 'styled-components';
@@ -9,17 +9,18 @@ import Sidebar from './components/navBar/SideBar';
 const queryclient = new QueryClient();
 
 const App = () => {
+  const [open, setOpen] = useState<boolean>(false);
   const location = useLocation();
   const pathname = location.pathname
 
   return (
     <>
-      <NavBar />
+      <NavBar setOpen={setOpen} open={open} />
       <VideoMain pathname={pathname}>
         <QueryClientProvider client={queryclient} >
           <YoutubeAPIProvider>
             {pathname.includes('watch') === false &&
-              <Sidebar />}
+              <Sidebar open={open} />}
             <Outlet />
           </YoutubeAPIProvider>
         </QueryClientProvider>
@@ -36,6 +37,6 @@ const VideoMain = styled.div< { pathname: string }>`
   display: flex;
 
   @media all and (max-width: 1024px) {
-    flex-wrap : ${(props) => (props.pathname !== '/' && 'wrap')};
+    flex-wrap : ${(props) => (props.pathname.includes('watch') && 'wrap')};
   }
 `;
