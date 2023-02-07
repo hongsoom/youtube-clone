@@ -2,7 +2,7 @@ import axios from "axios";
 
 class Youtube {
     httpClient: any;
-    channelList: any;
+    serrchList: any;
     finalList: any;
     channels: any;
     relatedList: any;
@@ -11,7 +11,7 @@ class Youtube {
             baseURL: 'https://www.googleapis.com/youtube/v3',
             params: { key: process.env.REACT_APP_YOUTUBE_API_KEY },
         });
-        this.channelList = [];
+        this.serrchList = [];
         this.finalList = [];
         this.channels = {};
     }
@@ -20,7 +20,7 @@ class Youtube {
     }
 
     async #searchByKeyword(keyword: string) {
-        return this.httpClient
+        const response = await this.httpClient
             .get('search', {
                 params: {
                     part: 'snippet',
@@ -29,10 +29,11 @@ class Youtube {
                     q: keyword,
                 },
             })
-            .then((res: any) => res.data.items)
-            .then((items: any) =>
-                items.map((item: any) => ({ ...item, id: item.id.videoId }))
-            );
+        this.serrchList = [];
+        response.data.items.map((item: any) => {
+            return this.serrchList.push(this.channel(item.snippet.channelId, item));
+        });
+        return Promise.all(this.serrchList).then((values) => values);
     }
 
     async #mostPopular() {
@@ -60,21 +61,15 @@ class Youtube {
                     relatedToVideoId: id,
                     type: 'video',
                     maxResults: 15,
-                    chart: 'mostPopular',
                 },
             })
 
         this.relatedList = [];
 
         response.data.items.map((item: any) => {
-            return this.relatedList.push({ ...item, id: item.id.videoId });
+            return this.relatedList.push(this.channel(item.snippet.channelId, item));
         });
-
-        this.finalList = [];
-        this.relatedList.map((item: any) => {
-            return this.finalList.push(this.channel(item.snippet.channelId, item));
-        });
-        return Promise.all(this.finalList).then((values) => values);
+        return Promise.all(this.relatedList).then((values) => values);
     }
 
     async channel(id: string, videos: any) {
