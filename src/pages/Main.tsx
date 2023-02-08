@@ -5,11 +5,15 @@ import { useYoutubeApi } from "../contenxt/YoutubeAPIContext";
 import Video from "../components/Video/Video";
 import Loading from "../components/Video/Loding";
 
+interface RouteState {
+  pathname: string,
+}
+
 const Videos = memo(() => {
   const { keyword } = useParams();
 
-  const location = useLocation();
-  const pathname = location.pathname
+  const location = useLocation() as RouteState;
+  const pathname: string = location.pathname
 
   const youtube = useYoutubeApi();
 

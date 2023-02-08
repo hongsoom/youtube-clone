@@ -7,13 +7,13 @@ import { MdOutlineHome, MdOutlineExplore, MdOutlineSubscriptions, MdOutlineVideo
 import { VscAccount } from "react-icons/vsc";
 import { AiOutlinePlaySquare, AiOutlineClockCircle, AiOutlineLike } from "react-icons/ai";
 
-interface PropsType {
+interface RouteState {
   pathname: string,
 }
 
 const Sidebar = memo(({ open }: any) => {
 
-  const location = useLocation() as PropsType;
+  const location = useLocation() as RouteState;
 
   const pathname: string = location.pathname;
 

@@ -2,20 +2,25 @@ import React, { memo } from "react";
 import styled from "styled-components";
 import VideoCard from "./VideoCard";
 
-const Video = memo(({ videos, display }: any) => {
-    const displayType: boolean = display.includes('watch') ? true : false;
+interface Props {
+  videos: [],
+  display: string
+}
 
-    return (
-        <VideoMainWrap displayType={displayType}>
-            {videos && videos.map((video: any, index: any) => (
-                <VideoCard
-                    key={index}
-                    video={video}
-                    display={display}
-                />
-            ))}
-        </VideoMainWrap>
-    );
+const Video = memo(({ videos, display }: Props) => {
+  const displayType: boolean = display.includes('watch') ? true : false;
+
+  return (
+    <VideoMainWrap displayType={displayType}>
+      {videos && videos.map((video: any, index: any) => (
+        <VideoCard
+          key={index}
+          video={video}
+          display={display}
+        />
+      ))}
+    </VideoMainWrap>
+  );
 });
 
 export default Video;
@@ -27,7 +32,7 @@ const VideoMainWrap = styled.ul < { displayType: boolean }>`
     grid-template-rows: ${(props) => (props.displayType ? 'repeat(auto-fit, 1fr)' : 'repeat(5, 1fr)')};
     grid-template-columns: ${(props) => (props.displayType ? '1fr' : 'repeat(auto-fit, minmax(320px, 1fr))')};
     column-gap: ${(props) => (props.displayType ? '0px' : '20px')};
-    row-gap: ${(props) => (props.displayType && '20px')};
+    row-gap: 20px;
     margin-right: ${(props) => (props.displayType && '30px')};
     animation: ${(props) => (props.displayType ? 'width 0.8s forwards ease-in-out' : '0')};
     overflow-x: ${(props) => (props.displayType ? '0' : 'hidden')};
@@ -43,6 +48,10 @@ const VideoMainWrap = styled.ul < { displayType: boolean }>`
       }
       
       @media all and (max-width: 480px) {
-        margin : ${(props) => (props.displayType === false && '0 20px')};
+        margin : ${(props) => (props.displayType === false && '0px')};
+      }
+
+      @media all and (max-width: 400px) {
+        margin : ${(props) => (props.displayType && '0 10px')};
       }
 `;

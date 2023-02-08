@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, } from 'react';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Outlet, useLocation } from 'react-router';
 import styled from 'styled-components';
@@ -6,12 +6,16 @@ import { YoutubeAPIProvider } from './contenxt/YoutubeAPIContext';
 import NavBar from "./components/navBar/NavBar";
 import Sidebar from './components/navBar/SideBar';
 
+interface RouteState {
+  pathname: string
+}
+
 const queryclient = new QueryClient();
 
 const App = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const location = useLocation();
-  const pathname = location.pathname
+  const location = useLocation() as RouteState;
+  const pathname: string = location.pathname
 
   return (
     <>

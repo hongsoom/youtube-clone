@@ -6,21 +6,44 @@ import { useYoutubeApi } from "../contenxt/YoutubeAPIContext";
 import { formatAgo } from "../shared/date";
 import Video from "../components/Video/Video";
 
+interface RouteState {
+  state: {
+    id: string
+    snippet: {
+      title: string
+      publishedAt: string
+      channelTitle: string
+      description: string
+    }
+    statistics: {
+      viewCount: any
+      subscriberCount: any
+    }
+    channelInfo: {
+      thumbnails: {
+        default: {
+          url: string
+        }
+      }
+    }
+  };
+  pathname: string,
+}
+
 const VideoDetail = memo(() => {
 
   const videoTop = useRef(null);
 
-  const location = useLocation();
-  const video = location.state;
-  const pathname = location.pathname;
-
-  const { snippet, statistics, channelInfo } = video;
+  const location = useLocation() as RouteState
+  const id: string = location.state.id;
+  const pathname: string = location.pathname;
+  const { snippet, statistics, channelInfo } = location.state;
 
   const youtube = useYoutubeApi();
 
   const {
     data: videos,
-  } = useQuery(['search', video.id], () => youtube.relatedVideos(video.id), {
+  } = useQuery(['search', id], () => youtube.relatedVideos(id), {
     staleTime: 1000 * 60 * 5,
   });
 
@@ -34,18 +57,18 @@ const VideoDetail = memo(() => {
 
   useEffect(() => {
     scrollTop();
-  }, [video]);
+  }, [id]);
 
   return (
     <VideoDetailWrap pathname={pathname}>
       <VideoDetailContent ref={videoTop}>
         <DetailWrap>
           <iframe
-            id={video.id}
+            id={id}
             title={snippet.title}
             width="100%"
             height="600px"
-            src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
+            src={`https://www.youtube.com/embed/${id}?autoplay=1&mute=1`}
             allowFullScreen
           ></iframe>
         </DetailWrap>
@@ -205,12 +228,26 @@ const ChannelDescWrap = styled.ul`
       }
   
       &:last-child {
-        width: 200px;
+        width: 130px;
         flex-grow: 0;
         position: absolute;
       }
     }
   }
+
+  @media all and (max-width: 400px) {
+    justify-content: flex-end;
+    margin-top: 25px;
+    flex-wrap: wrap;
+    position: relative;
+
+    li {  
+      &:last-child {
+        width: 100px;
+        flex-grow: 0;
+        position: absolute;
+      }
+    }
 `;
 
 const ChannelImg = styled.li`

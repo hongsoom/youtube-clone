@@ -3,12 +3,42 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { formatAgo } from "../../shared/date";
 
+interface Props {
+    video: {
+        id: string
+        snippet: {
+            title: string
+            publishedAt: string
+            channelTitle: string
+            description: string
+            thumbnails: {
+                medium: {
+                    url: string
+                }
+            }
+        }
+        statistics: {
+            viewCount: any
+            subscriberCount: any
+        }
+        channelInfo: {
+            thumbnails: {
+                medium: {
+                    url: string
+                }
+            }
+        }
+    };
+    display: string,
+}
+
 const VideoCard = memo(({ video, video: { snippet, statistics, channelInfo },
-    display }: any) => {
+    display }: Props) => {
 
     const displayType: boolean = display.includes('watch') ? true : false;
-    const { title, channelTitle, publishedAt, thumbnails } = snippet
-    const { viewCount } = statistics
+    const { title, channelTitle, publishedAt, thumbnails } = snippet;
+    const { viewCount } = statistics;
+    const result = title.replace(/&#39;/gi, '`');
 
     const navigate = useNavigate();
 
@@ -26,7 +56,7 @@ const VideoCard = memo(({ video, video: { snippet, statistics, channelInfo },
                         <ChanelImg src={channelInfo.thumbnails.medium.url} alt="" displayType={displayType} />
                     </li>
                     <ChanelInfo>
-                        <Title displayType={displayType}>{title}</Title>
+                        <Title displayType={displayType}>{result}</Title>
                         <Chanel displayType={displayType}>{channelTitle}</Chanel>
                         <Views displayType={displayType}>조회수 {viewCount > 10000
                             ? viewCount.slice(0, -4) + "만"
