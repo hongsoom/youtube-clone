@@ -60,7 +60,9 @@
 
 ### ③ React-Query
 
+서버 데이터를 위한 로직이 과도하게 커지고, 그로 인해서 Redux 를 활용하기 위한 보일러 플레이트가 비대해 진다는 점 
 
+React-Query 를 도입함 으로 Server Data 와 Client Data 의 경계를 분명하게 하면서 개발할 수 있을것 같다는 생각
 
 ### ④ React.memo
 
