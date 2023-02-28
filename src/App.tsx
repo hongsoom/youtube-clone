@@ -1,14 +1,11 @@
-import React, { useState, } from 'react';
+import React, { useState, memo } from 'react';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Outlet, useLocation } from 'react-router';
 import styled from 'styled-components';
 import { YoutubeAPIProvider } from './contenxt/YoutubeAPIContext';
+import { RouteState } from './types/types';
 import NavBar from "./components/navBar/NavBar";
 import Sidebar from './components/navBar/SideBar';
-
-interface RouteState {
-  pathname: string
-}
 
 const queryclient = new QueryClient();
 
@@ -33,7 +30,7 @@ const App = () => {
   );
 }
 
-export default App;
+export default memo(App);
 
 const VideoMain = styled.div< { pathname: string }>`
   width: 100%;

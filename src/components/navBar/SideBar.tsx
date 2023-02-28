@@ -1,17 +1,14 @@
 import React, { memo } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { RouteState } from "../../types/types";
 import { GOOGLE_AUTH_URL } from "../../shared/OAuth";
 import { IconContext } from "react-icons";
 import { MdOutlineHome, MdOutlineExplore, MdOutlineSubscriptions, MdOutlineVideoLibrary, MdRestore } from "react-icons/md";
 import { VscAccount } from "react-icons/vsc";
 import { AiOutlinePlaySquare, AiOutlineClockCircle, AiOutlineLike } from "react-icons/ai";
 
-interface RouteState {
-  pathname: string,
-}
-
-const Sidebar = memo(({ open }: any) => {
+const Sidebar = ({ open }: any) => {
 
   const location = useLocation() as RouteState;
 
@@ -87,9 +84,9 @@ const Sidebar = memo(({ open }: any) => {
       </IconContext.Provider>
     </Container>
   );
-});
+};
 
-export default Sidebar;
+export default memo(Sidebar);
 
 const Container = styled.div<{ open: boolean }>`
   max-width: 260px;

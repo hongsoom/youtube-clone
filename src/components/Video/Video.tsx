@@ -1,29 +1,25 @@
 import React, { memo } from "react";
 import styled from "styled-components";
+import { propsType } from "../../types/types";
 import VideoCard from "./VideoCard";
 
-interface Props {
-  videos: [],
-  display: string
-}
-
-const Video = memo(({ videos, display }: Props) => {
+const Video = ({ videos, display }: propsType) => {
   const displayType: boolean = display.includes('watch') ? true : false;
 
   return (
     <VideoMainWrap displayType={displayType}>
-      {videos && videos.map((video: any, index: any) => (
+      {videos && videos.map((video, index) => (
         <VideoCard
           key={index}
-          video={video}
+          state={video}
           display={display}
         />
       ))}
     </VideoMainWrap>
   );
-});
+};
 
-export default Video;
+export default memo(Video);
 
 const VideoMainWrap = styled.ul < { displayType: boolean }>`
     display: grid;

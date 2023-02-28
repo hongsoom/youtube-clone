@@ -2,41 +2,18 @@ import React, { memo, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import { useLocation } from "react-router";
+import { VideoType } from "../types/types";
 import { useYoutubeApi } from "../contenxt/YoutubeAPIContext";
 import { formatAgo } from "../shared/date";
 import Video from "../components/Video/Video";
 
-interface RouteState {
-  state: {
-    id: string
-    snippet: {
-      title: string
-      publishedAt: string
-      channelTitle: string
-      description: string
-    }
-    statistics: {
-      viewCount: any
-      subscriberCount: any
-    }
-    channelInfo: {
-      thumbnails: {
-        default: {
-          url: string
-        }
-      }
-    }
-  };
-  pathname: string,
-}
-
-const VideoDetail = memo(() => {
+const VideoDetail = () => {
 
   const videoTop = useRef(null);
 
-  const location = useLocation() as RouteState
-  const id: string = location.state.id;
-  const pathname: string = location.pathname;
+  const location = useLocation() as VideoType
+  const id = location.state.id;
+  const pathname = location.pathname!;
   const { snippet, statistics, channelInfo } = location.state;
 
   const youtube = useYoutubeApi();
@@ -88,7 +65,7 @@ const VideoDetail = memo(() => {
 
         <ChannelDescWrap>
           <ChannelImg>
-            <img src={channelInfo.thumbnails.default.url} alt="" />
+            <img src={channelInfo.thumbnails.medium.url} alt="" />
           </ChannelImg>
           <li>
             <ChannelName>{snippet.channelTitle}</ChannelName>
@@ -109,8 +86,8 @@ const VideoDetail = memo(() => {
       <Video display={pathname} videos={videos} />
     </VideoDetailWrap>
   )
-});
-export default VideoDetail;
+};
+export default memo(VideoDetail);
 
 const VideoDetailWrap = styled.div<{ pathname: string }>`
   width: 100%;

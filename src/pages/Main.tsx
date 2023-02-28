@@ -1,19 +1,16 @@
 import { memo } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { RouteState } from "../types/types";
 import { useYoutubeApi } from "../contenxt/YoutubeAPIContext";
 import Video from "../components/Video/Video";
 import Loading from "../components/Video/Loding";
 
-interface RouteState {
-  pathname: string,
-}
-
-const Videos = memo(() => {
+const Videos = () => {
   const { keyword } = useParams();
 
   const location = useLocation() as RouteState;
-  const pathname: string = location.pathname
+  const pathname: string = location.pathname;
 
   const youtube = useYoutubeApi();
 
@@ -29,15 +26,13 @@ const Videos = memo(() => {
       {isLoading ? (
         <Loading />
       ) : (
-        <>
-          <Video
-            videos={videos}
-            display={pathname}
-          />
-        </>
+        <Video
+          videos={videos}
+          display={pathname}
+        />
       )}
     </>
   );
-});
+};
 
-export default Videos
+export default memo(Videos);

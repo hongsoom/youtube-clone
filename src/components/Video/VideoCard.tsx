@@ -1,41 +1,13 @@
 import React, { memo } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { VideoType } from "../../types/types";
 import { formatAgo } from "../../shared/date";
 
-interface Props {
-    video: {
-        id: string
-        snippet: {
-            title: string
-            publishedAt: string
-            channelTitle: string
-            description: string
-            thumbnails: {
-                medium: {
-                    url: string
-                }
-            }
-        }
-        statistics: {
-            viewCount: any
-            subscriberCount: any
-        }
-        channelInfo: {
-            thumbnails: {
-                medium: {
-                    url: string
-                }
-            }
-        }
-    };
-    display: string,
-}
+const VideoCard = ({ state, state: { snippet, statistics, channelInfo },
+    display }: VideoType) => {
 
-const VideoCard = memo(({ video, video: { snippet, statistics, channelInfo },
-    display }: Props) => {
-
-    const displayType: boolean = display.includes('watch') ? true : false;
+    const displayType: boolean = display!.includes('watch') ? true : false;
     const { title, channelTitle, publishedAt, thumbnails } = snippet;
     const { viewCount } = statistics;
     const result = title.replace(/&#39;/gi, '`');
@@ -44,7 +16,7 @@ const VideoCard = memo(({ video, video: { snippet, statistics, channelInfo },
 
     return (
         <VideoItem displayType={displayType}
-            onClick={() => navigate(`/videos/watch/${video.id}`, { state: video })}
+            onClick={() => navigate(`/videos/watch/${state.id}`, { state: state })}
         >
             <Thumbnail displayType={displayType}>
                 <ThumbImg src={thumbnails.medium.url} alt="youtube_videos" displayType={displayType} />
@@ -67,9 +39,9 @@ const VideoCard = memo(({ video, video: { snippet, statistics, channelInfo },
             </InfoWrap>
         </VideoItem >
     );
-});
+};
 
-export default VideoCard;
+export default memo(VideoCard);
 
 const VideoItem = styled.li< { displayType: boolean }>`
     width: 100%;
