@@ -10,7 +10,7 @@ import { TbVideoPlus } from 'react-icons/tb';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { VscAccount } from 'react-icons/vsc';
 
-const SearchNav = memo(({ setOpen, open }: any) => {
+const SearchNav = ({ setOpen, open }: any) => {
     const { keyword } = useParams();
 
     const navigate = useNavigate();
@@ -87,7 +87,9 @@ const SearchNav = memo(({ setOpen, open }: any) => {
             </ProfileWrap>
         </NavWrap>
     );
-});
+};
+
+export default memo(SearchNav);
 
 const NavWrap = styled.div`
     height: 90px;
@@ -212,5 +214,3 @@ const BaseProfile = styled(VscAccount)`
         transform: scale(1.3);
     }
 `
-
-export default SearchNav;
