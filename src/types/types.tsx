@@ -8,7 +8,7 @@ export type propsType = {
 }
 
 export type VideoType = {
-    state: {
+    video: {
         id: string
         snippet: {
             title: string
@@ -16,7 +16,10 @@ export type VideoType = {
             channelTitle: string
             description: string
             thumbnails: {
-                medium: {
+                maxres?: {
+                    url: string
+                }
+                standard?: {
                     url: string
                 }
             }
