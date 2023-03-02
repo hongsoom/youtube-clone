@@ -1,37 +1,60 @@
 import { createBrowserRouter } from 'react-router-dom';
-import App from './App';
-import Videos from './pages/Main';
-import VideoDetail from './pages/VideoDetail';
-import Subscribe from './pages/Subscribe';
-import Finder from './pages/Finder';
-import History from './pages/History';
-import Storage from './pages/storage';
-import Channel from './pages/Channel';
-import PlayList from './pages/PlayList';
-import Like from './pages/Like';
-import Login from './pages/Login';
+import { lazyLoadRoutes } from './lazyLoadRoutes';
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <App />,
+        element: lazyLoadRoutes('App'),
         children: [
-            { index: true, element: <Videos /> },
-            { path: 'videos', element: <Videos /> },
-            { path: 'videos/:keyword', element: <Videos /> },
-            { path: 'videos/watch/:videoId', element: <VideoDetail /> },
-            { path: 'subscribe', element: <Subscribe /> },
-            { path: 'finder', element: <Finder /> },
-            { path: 'history', element: <History /> },
-            { path: 'storage', element: <Storage /> },
-            { path: 'channel', element: <Channel /> },
-            { path: 'playlist', element: <PlayList /> },
-            { path: 'like', element: <Like /> }
+            {
+                index: true,
+                element: lazyLoadRoutes('Home')
+            },
+            {
+                path: 'videos',
+                element: lazyLoadRoutes('Home')
+            },
+            {
+                path: 'videos/:keyword',
+                element: lazyLoadRoutes('Home')
+            },
+            {
+                path: 'videos/watch/:videoId',
+                element: lazyLoadRoutes('VideoDetail')
+            },
+            {
+                path: 'subscribe',
+                element: lazyLoadRoutes('Subscribe')
+            },
+            {
+                path: 'finder',
+                element: lazyLoadRoutes('Finder')
+            },
+            {
+                path: 'history',
+                element: lazyLoadRoutes('History')
+            },
+            {
+                path: 'storage',
+                element: lazyLoadRoutes('Storage')
+            },
+            {
+                path: 'channel',
+                element: lazyLoadRoutes('Channel')
+            },
+            {
+                path: 'playlist',
+                element: lazyLoadRoutes('PlayList')
+            },
+            {
+                path: 'like',
+                element: lazyLoadRoutes('Like')
+            }
         ],
     },
     {
         path: '/oauth/callback/google',
-        element: <Login />,
+        element: lazyLoadRoutes('Login')
     }
 ]);
 
