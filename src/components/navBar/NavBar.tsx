@@ -1,95 +1,23 @@
-import React, { memo, useRef, useEffect, useState, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { memo } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import WaitModal from './WaitModal';
-import logo from '../../assets/logo.png';
-import { HiOutlineBars3 } from 'react-icons/hi2';
-import { HiOutlineSearch } from 'react-icons/hi';
-import { TbVideoPlus } from 'react-icons/tb';
-import { IoMdNotificationsOutline } from 'react-icons/io';
-import { VscAccount } from 'react-icons/vsc';
+import Logo from './Logo';
+import Search from './Search';
+import Profile from './Profile';
 
-const SearchNav = ({ setOpen, open }: any) => {
-    const { keyword } = useParams();
-
-    const navigate = useNavigate();
-
-    const [searchInput, setSearchInput] = useState<string>('');
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [img, setImg] = useState<string>("");
-
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    const hash = sessionStorage.getItem("hash");
-
-    const onClickButton = useCallback(() => {
-        setIsOpen(!isOpen);
-    }, [isOpen]);
-
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchInput(e.target.value);
-    };
-
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        navigate(`/videos/${searchInput}`);
-    };
-
-    const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            handleSearch(e);
-        }
-    };
-
-    useEffect(() => {
-        setSearchInput(keyword || '');
-    }, [keyword]);
-
-    useEffect(() => {
-        if (hash) {
-            const accessToken = hash.split("=")[1].split("&")[0];
-            axios.get('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + accessToken, {
-                headers: {
-                    authorization: `token ${accessToken}`,
-                    accept: 'application/json'
-                }
-            })
-                .then(res => {
-                    setImg(res.data.picture);
-                }).catch(e => console.log('oAuth token expired'));
-        }
-    }, [hash])
+const NavBar = ({ setOpen, open }: any) => {
 
     return (
+        <>
         <NavWrap>
-            <LogoWrap>
-                <Category onClick={() => setOpen(!open)} />
-                <Logo src={logo} alt='youtubeLogo' onClick={() => navigate('/')} />
-            </LogoWrap>
-            <SearchWrap>
-                <SearchBar
-                    placeholder='검색'
-                    type='text'
-                    value={searchInput}
-                    ref={inputRef}
-                    onChange={onChange}
-                    onKeyPress={onKeyPress} />
-                <SearchBtn onClick={handleSearch} />
-            </SearchWrap>
-            <ProfileWrap>
-                {isOpen && (<WaitModal onClickButton={onClickButton} />)}
-                <Video onClick={onClickButton} />
-                <Notification onClick={onClickButton} />
-                {hash ?
-                    <Profile src={img} alt="profile" />
-                    : <BaseProfile />}
-            </ProfileWrap>
+            <Logo setOpen={setOpen} open={open}/>
+            <Search />
+            <Profile />
         </NavWrap>
+    </>
     );
 };
 
-export default memo(SearchNav);
+export default memo(NavBar);
 
 const NavWrap = styled.div`
     height: 90px;
@@ -101,116 +29,5 @@ const NavWrap = styled.div`
 
     @media all and (max-width: 500px) {
         margin: 0 20px;
-    }
-`
-
-const LogoWrap = styled.div`
-    display: flex;
-    align-items: center;
-    flex-shrink: 1;
-    flex-basis: 150px;
-`
-
-const Category = styled(HiOutlineBars3)`
-    font-size : 24px;
-    cursor: pointer;
-`
-
-const Logo = styled.img`
-    width: 100px;
-    height: 24px;
-    padding : 10px;
-    cursor: pointer;
-`
-
-const SearchWrap = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-`
-
-const SearchBar = styled.input`
-    width: 500px;
-    height: 34px;
-    border-radius: 22px;
-    padding: 0 20px;
-    background-color: rgba(211, 211, 211, 0.3);
-    color: rgb(44, 44, 44);
-    border: none;
-    outline: none;
-    font-size: 13px;
-    transition: all 0.3s ease-in-out;
-
-    @media all and (max-width: 1000px) {
-        width: calc(100% - 20%);
-        box-sizing: border-box;
-        padding: 0 0 0 20px;
-    }
-`
-
-const SearchBtn = styled(HiOutlineSearch)`
-    margin-left: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    font-size: 25px;
-
-    &:hover {
-        color: #ff0000;
-        transform: scale(1.3);
-    }
-`
-
-const ProfileWrap = styled.div`
-    display : flex;
-    justify-content: space-between;
-    width: 120px;
-    height: 24px;
-    padding : 10px;
-    cursor: pointer;
-
-    @media all and (max-width: 500px) {
-        display : none;
-    }
-`
-
-const Video = styled(TbVideoPlus)`
-    font-size: 25px;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-
-    &:hover {
-        transform: scale(1.3);
-    }
-`
-
-const Notification = styled(IoMdNotificationsOutline)`
-    font-size: 25px;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-
-    &:hover {
-        transform: scale(1.3);
-    }
-`
-
-const Profile = styled.img`
-    width: 25px;
-    cursor: pointer;
-    border-radius : 15px;
-    transition: transform 0.3s ease-in-out;
-
-    &:hover {
-        transform: scale(1.3);
-    }
-`
-
-const BaseProfile = styled(VscAccount)`
-    font-size: 25px;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-
-    &:hover {
-        transform: scale(1.3);
     }
 `
