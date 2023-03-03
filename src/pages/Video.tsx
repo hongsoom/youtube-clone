@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { RouteState } from "../types/types";
@@ -29,4 +28,4 @@ const Video = () => {
   );
 };
 
-export default memo(Video);
+export default Video;

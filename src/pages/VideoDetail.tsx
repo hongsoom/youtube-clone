@@ -1,4 +1,3 @@
-import React, { memo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import { useLocation } from "react-router";
@@ -7,6 +6,7 @@ import { useYoutubeApi } from "../contenxt/YoutubeAPIContext";
 import NavBar from "../components/NavBar/NavBar";
 import VideoExecution from "../components/Video/VideoExecution";
 import VideoList from "../components/Video/VideoList";
+import MetaTag from "../shared/MetaTag";
 
 const VideoDetail = () => {
 
@@ -25,6 +25,7 @@ const VideoDetail = () => {
 
   return (
     <>
+      <MetaTag video={location.state} />
       <NavBar />
       <VideoDetailWrap pathname={pathname}>
         <VideoExecution video={location.state} />
@@ -33,7 +34,7 @@ const VideoDetail = () => {
     </>
   )
 };
-export default memo(VideoDetail);
+export default VideoDetail;
 
 const VideoDetailWrap = styled.div<{ pathname: string }>`
   width: 100%;

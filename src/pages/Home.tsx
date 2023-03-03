@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router';
 import styled from 'styled-components';
 import { RouteState } from '../types/types';
@@ -23,7 +23,7 @@ const Home = () => {
     );
 }
 
-export default memo(Home);
+export default Home;
 
 const VideoMain = styled.div< { pathname: string }>`
   width: 100%;

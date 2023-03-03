@@ -1,75 +1,76 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, memo } from "react";
 import styled from "styled-components";
 import { formatAgo } from "../../shared/date";
 import { VideoType } from "../../types/types";
 
 const VideoExecution = ({ video }: VideoType) => {
 
-    const videoTop = useRef(null);
+  const videoTop = useRef(null);
 
-    const { id, snippet, statistics, channelInfo } = video;
+  const { id, snippet, statistics, channelInfo } = video;
 
-    const scrollTop = () => {
-        window.scroll({
-            top: 0,
-            left: 0,
-            behavior: "smooth",
-        });
-    };
+  const scrollTop = () => {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
 
-    useEffect(() => {
-        scrollTop();
-    }, [id]);
+  useEffect(() => {
+    scrollTop();
+  }, [id]);
 
-    return (
-        <VideoDetailContent ref={videoTop}>
-            <DetailWrap>
-                <iframe
-                    id={id}
-                    title={snippet.title}
-                    width="100%"
-                    height="600px"
-                    src={`https://www.youtube.com/embed/${id}?autoplay=1&mute=1`}
-                    allowFullScreen
-                ></iframe>
-            </DetailWrap>
+  return (
+    <VideoDetailContent ref={videoTop}>
+      <DetailWrap>
+        <iframe
+          id={id}
+          title={snippet.title}
+          width="100%"
+          height="600px"
+          src={`https://www.youtube.com/embed/${id}?autoplay=1&mute=1`}
+          allowFullScreen
+          aria-label={snippet.title}
+        ></iframe>
+      </DetailWrap>
 
-            <TitlePartWrap>
-                <DetailTitle>
-                    <h3>{snippet.title}</h3>
-                    <p>
-                        조회수{" "}
-                        {statistics.viewCount > 10000
-                            ? statistics.viewCount.slice(0, -4) + "만"
-                            : statistics.viewCount}
-                        회 &#183; {formatAgo(snippet.publishedAt, 'ko')}
-                    </p>
-                </DetailTitle>
-            </TitlePartWrap>
+      <TitlePartWrap>
+        <DetailTitle>
+          <h3>{snippet.title}</h3>
+          <p>
+            조회수{" "}
+            {statistics.viewCount > 10000
+              ? statistics.viewCount.slice(0, -4) + "만"
+              : statistics.viewCount}
+            회 &#183; {formatAgo(snippet.publishedAt, 'ko')}
+          </p>
+        </DetailTitle>
+      </TitlePartWrap>
 
-            <ChannelDescWrap>
-                <ChannelImg>
-                    <img src={channelInfo.thumbnails.medium.url} alt="" />
-                </ChannelImg>
-                <li>
-                    <ChannelName>{snippet.channelTitle}</ChannelName>
-                    <PublishedDate>
-                        구독자{" "}
-                        {statistics.subscriberCount > 10000
-                            ? statistics.subscriberCount.slice(0, -4) + "만"
-                            : statistics.subscriberCount}
-                        명
-                    </PublishedDate>
-                    <ChannelDescription>{snippet.description}</ChannelDescription>
-                </li>
-                <li>
-                    <SubscribeBtn>Subscribe</SubscribeBtn>
-                </li>
-            </ChannelDescWrap>
-        </VideoDetailContent >
-    )
+      <ChannelDescWrap>
+        <ChannelImg>
+          <img src={channelInfo.thumbnails.medium.url} alt="채널이미지" />
+        </ChannelImg>
+        <li>
+          <ChannelName>{snippet.channelTitle}</ChannelName>
+          <PublishedDate>
+            구독자{" "}
+            {statistics.subscriberCount > 10000
+              ? statistics.subscriberCount.slice(0, -4) + "만"
+              : statistics.subscriberCount}
+            명
+          </PublishedDate>
+          <ChannelDescription>{snippet.description}</ChannelDescription>
+        </li>
+        <li>
+          <SubscribeBtn aria-label="구독버튼">Subscribe</SubscribeBtn>
+        </li>
+      </ChannelDescWrap>
+    </VideoDetailContent>
+  )
 };
-export default VideoExecution;
+export default memo(VideoExecution);
 
 const VideoDetailContent = styled.section`
   padding: 1.5em;
@@ -239,7 +240,7 @@ const ChannelDescription = styled.p`
   overflow: hidden;
 `;
 
-const SubscribeBtn = styled.span`
+const SubscribeBtn = styled.button`
   background-color: #ff0000;
   color: #fff;
   width: 100%;
