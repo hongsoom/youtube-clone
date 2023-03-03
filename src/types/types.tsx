@@ -2,6 +2,13 @@ export type RouteState = {
     pathname: string;
 }
 
+export type FormType = {
+    icon: any,
+    login: string,
+    notlogin: string,
+    notloginD: string
+}
+
 export type propsType = {
     videos: [],
     display: string
@@ -29,6 +36,7 @@ export type VideoType = {
             subscriberCount: any
         }
         channelInfo: {
+            description: string
             thumbnails: {
                 medium: {
                     url: string
