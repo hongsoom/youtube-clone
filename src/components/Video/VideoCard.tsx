@@ -4,28 +4,32 @@ import { useNavigate } from "react-router-dom";
 import { VideoType } from "../../types/types";
 import { formatAgo } from "../../shared/date";
 
-const VideoCard = ({ state, state: { snippet, statistics, channelInfo },
+const VideoCard = ({ video, video: { snippet, statistics, channelInfo },
     display }: VideoType) => {
 
-    const displayType: boolean = display!.includes('watch') ? true : false;
     const { title, channelTitle, publishedAt, thumbnails } = snippet;
     const { viewCount } = statistics;
+
+    const displayType: boolean = display!.includes('watch') ? true : false;
+    const maxres: boolean = Object.keys(thumbnails).includes('maxres');
+
     const result = title.replace(/&#39;/gi, '`');
 
     const navigate = useNavigate();
 
+
     return (
         <VideoItem displayType={displayType}
-            onClick={() => navigate(`/videos/watch/${state.id}`, { state: state })}
+            onClick={() => navigate(`/videos/watch/${video.id}`, { state: video })}
         >
             <Thumbnail displayType={displayType}>
-                <ThumbImg src={thumbnails.medium.url} alt="youtube_videos" displayType={displayType} />
+                <ThumbImg src={maxres ? thumbnails.maxres!.url : thumbnails.standard!.url} alt="썸네일" loading="lazy" displayType={displayType} />
             </Thumbnail>
 
             <InfoWrap displayType={displayType}>
                 <Info displayType={displayType}>
                     <li>
-                        <ChanelImg src={channelInfo.thumbnails.medium.url} alt="" displayType={displayType} />
+                        <ChanelImg src={channelInfo.thumbnails.medium.url} alt="채널이미지" displayType={displayType} />
                     </li>
                     <ChanelInfo>
                         <Title displayType={displayType}>{result}</Title>
@@ -37,7 +41,7 @@ const VideoCard = ({ state, state: { snippet, statistics, channelInfo },
                     </ChanelInfo>
                 </Info>
             </InfoWrap>
-        </VideoItem >
+        </VideoItem>
     );
 };
 
@@ -70,13 +74,6 @@ const Thumbnail = styled.figure< { displayType: boolean }>`
     width : ${(props) => (props.displayType && '168px')};
     margin-right :  ${(props) => (props.displayType && '10px')};
 
-    img {
-        border-radius: 12px;
-        transition: all 0.3s ease-in-out;
-        width : ${(props) => (props.displayType ? '168px' : '100%')};
-        height : ${(props) => (props.displayType && '94.5px')};
-    }
-
     @media all and (max-width: 400px) {
         margin-left: ${(props) => (props.displayType && '0px')};
         width: ${(props) => (props.displayType && 'fit-content')};
@@ -88,9 +85,8 @@ const ThumbImg = styled.img< { displayType: boolean }>`
     border-radius: 12px;
     transition: all 0.3s ease-in-out;
     width : ${(props) => (props.displayType ? '168px' : '100%')};
-    height : ${(props) => (props.displayType && '94.5px')};
+    height : ${(props) => (props.displayType ? '94.5px' : 'auto')};
  
-
     @media all and (max-width: 400px) {
         width: ${(props) => (props.displayType && '100px')};
         height: ${(props) => (props.displayType && '76px')};
