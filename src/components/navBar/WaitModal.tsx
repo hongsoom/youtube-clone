@@ -2,21 +2,21 @@ import React, { PropsWithChildren } from "react";
 import styled from 'styled-components';
 
 interface ModalDefaultType {
-    onClickButton: () => void;
+  onClickButton: () => void;
 }
 
 const WaitModal = ({ onClickButton }: PropsWithChildren<ModalDefaultType>) => {
 
-    return (
-        <Overlay onClick={onClickButton}>
-            <ModalWrap >
-                <Contents>
-                    <h1>죄송합니다! 아직 준비중입니다🙇‍♀️</h1>
-                    <Button onClick={onClickButton}>Close</Button>
-                </Contents>
-            </ModalWrap>
-        </Overlay>
-    );
+  return (
+    <Overlay onClick={onClickButton}>
+      <ModalWrap >
+        <Contents>
+          <h1>죄송합니다! 아직 준비중입니다🙇‍♀️</h1>
+          <Button onClick={onClickButton} aria-label='닫기버튼'>Close</Button>
+        </Contents>
+      </ModalWrap>
+    </Overlay>
+  );
 };
 
 const Overlay = styled.div`

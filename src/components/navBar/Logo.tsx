@@ -9,7 +9,7 @@ const Logo = ({ setOpen, open }: any) => {
 
     return (
         <LogoWrap>
-            <Category onClick={() => setOpen(!open)} />
+            <Category aria-label='카테고리버튼' onClick={() => setOpen(!open)} />
             <LogoImg src={logo} alt='youtubeLogo' onClick={() => navigate('/')} />
         </LogoWrap>
     );

@@ -35,11 +35,11 @@ const Profile = () => {
     return (
         <ProfileWrap>
             {isOpen && (<WaitModal onClickButton={onClickButton} />)}
-            <Video onClick={onClickButton} />
-            <Notification onClick={onClickButton} />
+            <Video onClick={onClickButton} aria-label='동영상만들기버튼' />
+            <Notification onClick={onClickButton} aria-label='알림버튼' />
             {hash ?
-                <ProfileImg src={img} alt="profile" />
-                : <BaseProfile />}
+                <ProfileImg src={img} alt="profile" aria-label='내계정버튼' />
+                : <BaseProfile aria-label='로그인버튼' />}
         </ProfileWrap>
     );
 };

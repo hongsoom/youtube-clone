@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
 import { HiOutlineSearch } from 'react-icons/hi';
 
 const Search = () => {
@@ -12,11 +11,7 @@ const Search = () => {
 
     const [searchInput, setSearchInput] = useState<string>('');
 
-    const [img, setImg] = useState<string>("");
-
     const inputRef = useRef<HTMLInputElement>(null);
-
-    const hash = sessionStorage.getItem("hash");
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(e.target.value);
@@ -37,21 +32,6 @@ const Search = () => {
         setSearchInput(keyword || '');
     }, [keyword]);
 
-    useEffect(() => {
-        if (hash) {
-            const accessToken = hash.split("=")[1].split("&")[0];
-            axios.get('https://www.googleapis.com/oauth2/v2/userinfo?access_token=' + accessToken, {
-                headers: {
-                    authorization: `token ${accessToken}`,
-                    accept: 'application/json'
-                }
-            })
-                .then(res => {
-                    setImg(res.data.picture);
-                }).catch(e => console.log('oAuth token expired'));
-        }
-    }, [hash])
-
     return (
         <SearchWrap>
             <SearchBar
@@ -60,8 +40,10 @@ const Search = () => {
                 value={searchInput}
                 ref={inputRef}
                 onChange={onChange}
-                onKeyPress={onKeyPress} />
-            <SearchBtn onClick={handleSearch} />
+                onKeyPress={onKeyPress}
+                aria-label='검색어창'
+            />
+            <SearchBtn onClick={handleSearch} aria-label='검색버튼' />
         </SearchWrap>
     );
 };
