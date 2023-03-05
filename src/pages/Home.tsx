@@ -15,8 +15,7 @@ const Home = () => {
         <>
             <NavBar setOpen={setOpen} open={open} />
             <VideoMain pathname={pathname}>
-                {pathname.includes('watch') === false &&
-                    <SideBar open={open} />}
+                <SideBar open={open} />
                 <Video />
             </VideoMain>
         </>
