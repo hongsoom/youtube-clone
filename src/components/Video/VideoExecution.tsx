@@ -1,35 +1,46 @@
-import React, { useRef, useEffect, memo } from "react";
-import styled from "styled-components";
-import { formatAgo } from "../../shared/date";
-import { VideoType } from "../../types/types";
+import React, { useRef, useEffect, memo, useState } from 'react';
+import styled from 'styled-components';
+import { formatAgo } from '../../shared/date';
+import { VideoType } from '../../types/types';
 
 const VideoExecution = ({ video }: VideoType) => {
-
   const videoTop = useRef(null);
 
-  const { id, snippet, statistics, channelInfo } = video;
+  const { snippet, statistics, channelInfo } = video;
+  const [idchek, setIdChek] = useState('');
 
   const scrollTop = () => {
     window.scroll({
       top: 0,
       left: 0,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
+  };
+
+  const idcheck = () => {
+    if (typeof video.id === 'string') {
+      setIdChek(video.id);
+    } else {
+      setIdChek(video.id.videoId);
+    }
   };
 
   useEffect(() => {
     scrollTop();
-  }, [id]);
+  }, [idchek]);
+
+  useEffect(() => {
+    idcheck();
+  }, [video]);
 
   return (
     <VideoDetailContent ref={videoTop}>
       <DetailWrap>
         <iframe
-          id={id}
           title={snippet.title}
-          width="100%"
-          height="600px"
-          src={`https://www.youtube.com/embed/${id}?autoplay=1&mute=1`}
+          width='100%'
+          height='600px'
+          src={`https://www.youtube.com/embed/${idchek}?autoplay=1&mute=1`}
           allowFullScreen
           aria-label={snippet.title}
         ></iframe>
@@ -39,9 +50,9 @@ const VideoExecution = ({ video }: VideoType) => {
         <DetailTitle>
           <h3>{snippet.title}</h3>
           <p>
-            조회수{" "}
+            조회수{' '}
             {statistics.viewCount > 10000
-              ? statistics.viewCount.slice(0, -4) + "만"
+              ? statistics.viewCount.slice(0, -4) + '만'
               : statistics.viewCount}
             회 &#183; {formatAgo(snippet.publishedAt, 'ko')}
           </p>
@@ -50,31 +61,31 @@ const VideoExecution = ({ video }: VideoType) => {
 
       <ChannelDescWrap>
         <ChannelImg>
-          <img src={channelInfo.thumbnails.medium.url} alt="채널이미지" />
+          <img src={channelInfo.thumbnails.medium.url} alt='채널이미지' />
         </ChannelImg>
         <li>
           <ChannelName>{snippet.channelTitle}</ChannelName>
           <PublishedDate>
-            구독자{" "}
+            구독자{' '}
             {statistics.subscriberCount > 10000
-              ? statistics.subscriberCount.slice(0, -4) + "만"
+              ? statistics.subscriberCount.slice(0, -4) + '만'
               : statistics.subscriberCount}
             명
           </PublishedDate>
           <ChannelDescription>{snippet.description}</ChannelDescription>
         </li>
         <li>
-          <SubscribeBtn aria-label="구독버튼">Subscribe</SubscribeBtn>
+          <SubscribeBtn aria-label='구독버튼'>Subscribe</SubscribeBtn>
         </li>
       </ChannelDescWrap>
     </VideoDetailContent>
-  )
+  );
 };
 export default memo(VideoExecution);
 
 const VideoDetailContent = styled.section`
   padding: 1.5em;
-  width : 1500px;
+  width: 1500px;
 `;
 
 const DetailWrap = styled.div`
@@ -127,7 +138,7 @@ const DetailTitle = styled.li`
     margin-top: 10px;
   }
 
-  @media all and (max-width: 768px) { 
+  @media all and (max-width: 768px) {
     width: 100%;
 
     h3 {
@@ -135,7 +146,6 @@ const DetailTitle = styled.li`
       line-height: 1.5;
     }
   }
-
 `;
 
 const ChannelDescWrap = styled.ul`
@@ -252,6 +262,7 @@ const SubscribeBtn = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
   font-size: 1vw;
+  border: 0;
 
   &:hover {
     background-color: #b40202;
@@ -261,5 +272,3 @@ const SubscribeBtn = styled.button`
     font-size: 16px;
   }
 `;
-
-
