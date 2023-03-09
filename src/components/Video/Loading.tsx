@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import loading from "../../assets/loading.gif";
+import React from 'react';
+import styled from 'styled-components';
+import loading from '../../assets/loading.gif';
 
 const Loading = () => {
   return (
@@ -30,6 +30,5 @@ const LoadingImg = styled.img`
     to {
       transform: rotate(360deg);
     }
-}
+  }
 `;
-

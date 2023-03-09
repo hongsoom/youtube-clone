@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
 interface ModalDefaultType {
@@ -6,13 +6,14 @@ interface ModalDefaultType {
 }
 
 const WaitModal = ({ onClickButton }: PropsWithChildren<ModalDefaultType>) => {
-
   return (
     <Overlay onClick={onClickButton}>
-      <ModalWrap >
+      <ModalWrap>
         <Contents>
           <h1>죄송합니다! 아직 준비중입니다🙇‍♀️</h1>
-          <Button onClick={onClickButton} aria-label='닫기버튼'>Close</Button>
+          <Button onClick={onClickButton} aria-label='닫기버튼'>
+            Close
+          </Button>
         </Contents>
       </ModalWrap>
     </Overlay>
@@ -43,7 +44,7 @@ const ModalWrap = styled.div`
 `;
 
 const Contents = styled.div`
-  display : flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
