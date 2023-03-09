@@ -14,6 +14,7 @@ const PageForm = ({
 
     return (
         <ButtonWrap>
+            <IconImg />
             {hash ?
                 <h1>{login}</h1>
                 :
@@ -27,6 +28,10 @@ const PageForm = ({
         </ButtonWrap>
     )
 }
+
+const IconImg = styled(icon: any)`
+    font-size: 25px;
+`
 
 export default PageForm;
 
