@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Outlet } from 'react-router';
 import styled from 'styled-components';
-import NavBar from './components/NavBar/NavBar';
+import NavBar from './components/navBar/NavBar';
 import SideBar from './components/SideBar/SideBar';
 import { YoutubeAPIProvider } from './contenxt/YoutubeAPIContext';
 import { RouteState } from './types/types';
@@ -18,7 +18,7 @@ const App = () => {
   return (
     <>
       <Helmet>
-        <title>Youtube TEST</title>
+        <title>Youtube</title>
       </Helmet>
       <QueryClientProvider client={queryclient}>
         <YoutubeAPIProvider>
