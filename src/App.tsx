@@ -5,7 +5,7 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Outlet } from 'react-router';
 import styled from 'styled-components';
 import NavBar from './components/navBar/NavBar';
-import SideBar from './components/SideBar/SideBar';
+import SideBar from './components/sideBar/SideBar';
 import { YoutubeAPIProvider } from './contenxt/YoutubeAPIContext';
 import { RouteState } from './types/types';
 

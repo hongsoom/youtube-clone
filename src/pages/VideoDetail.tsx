@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { useLocation } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { useYoutubeApi } from '../contenxt/YoutubeAPIContext';
-import VideoExecution from '../components/Video/VideoExecution';
-import VideoList from '../components/Video/VideoList';
+import VideoExecution from '../components/video/VideoExecution';
+import VideoList from '../components/video/VideoList';
 import MetaTag from '../shared/MetaTag';
 
 const VideoDetail = () => {
